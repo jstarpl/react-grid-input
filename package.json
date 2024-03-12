@@ -1,6 +1,6 @@
 {
   "name": "@jstarpl/react-grid-input",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "type": "module",
   "main": "./dist/react-grid-input.js",
   "types": "./dist/main.d.ts",
