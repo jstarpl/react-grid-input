@@ -1,0 +1,6 @@
+.GridInput {
+	display: grid;
+	max-width: none;
+	text-align: initial;
+	grid-auto-flow: column;
+}

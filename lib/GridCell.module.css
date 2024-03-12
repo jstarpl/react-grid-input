@@ -1,0 +1,21 @@
+.GridCell {
+	line-height: 1.5em;
+	min-height: 1.5em;
+	min-width: 1em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+
+	text-align: center;
+	position: relative;
+	cursor: text;
+}
+
+.GridCell select {
+	position: absolute;
+	min-width: 100%;
+	width: auto;
+	top: 0;
+	left: 0;
+	bottom: 0;
+}
