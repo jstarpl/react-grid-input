@@ -1,49 +1,24 @@
-# Tabular Input for React
+# Grid Input for React
 
-This is a React input component that allows manipulation of structured text in a spreadsheet-like fashion, so that you can quickly type new data in.
+This is a React input component that allows inserting text from a predefined list of options into a grid. The output value is a list of key-value pairs.
 
 ## Install
 
 ```
-npm i -S @jstarpl/react-tabular-input
+npm i -S @jstarpl/react-grid-input
 ```
 
 ## Use
 
 ```JSX
-    <TabularInput
-        value={value}
-        columns={[
-            {
-                label: "Column 1", // string or JSX
-                tag: "C1", // needs to be unique
-                width: "2fr", // CSS Grid column width string
-            },
-            {
-                label: <>Column 2</>,
-                tag: "C2",
-                width: "100px",
-            },
-            {
-                label: <em>Column 3</em>,
-                tag: "C3",
-                width: "3fr",
-            },
-        ]}
-        showInsertButton
-        draggable
-        highlightRange={[0, 1]} // highlight rows from first index, up to, but excluding second index
-        insertButtonLabel="Add new item" // string or JSX
-        deleteButtonLabel={<DeleteIcon />}
-        onChange={setValue}
-        shouldAllowDeleteRow={shouldAllowDeleteRow}
-    />
+<GridInput
+    value={value}
+    columns={9}
+    rows={9}
+    onChange={setValue}
+    options={availableOptions}
+/>
 ```
-
-## Extras
-
-- Odd and even rows are marked using `data-odd-even="odd"` and `data-odd-even="even"` attributes
-- Highlighted rows are marked using `data-highlight` attribute
 
 ## Requirements
 
