@@ -7,19 +7,28 @@ export const GridCell = React.memo(function GridCell({
 	row,
 	column,
 	options,
+	allowFreeText,
 	onChange,
 }: {
 	row: number;
 	column: number;
 	value: string | undefined;
-	displayValue?: string;
+	displayValue: string | undefined;
 	options: string[];
+	allowFreeText: boolean;
 	onChange?: (row: number, column: number, value: string) => void;
 }): React.ReactNode {
 	const [active, setActive] = useState(false);
-	const [selectRef, setSelectRef] = useState<HTMLSelectElement | null>(null);
+	const [isFreeText, setFreeText] = useState(false);
+	const [selectRef, setInputRef] = useState<
+		HTMLSelectElement | HTMLInputElement | null
+	>(null);
 
-	const allOptions = useMemo(() => ["", ...options], [options]);
+	const allOptions = useMemo(() => {
+		const base = ["", ...options];
+		if (value !== undefined && base.indexOf(value) < 0) base.unshift(value);
+		return base;
+	}, [options, value]);
 
 	function onActivate() {
 		setActive(true);
@@ -27,27 +36,42 @@ export const GridCell = React.memo(function GridCell({
 
 	function onDeactivate() {
 		setActive(false);
+		setFreeText(false);
 	}
 
 	function onSelectChange(e: React.ChangeEvent<HTMLSelectElement>) {
 		setActive(false);
+		setFreeText(false);
 		onChange?.(row, column, e.target.value);
 	}
 
-	function onClick() {
+	function onTextInputBlur(e: React.FocusEvent<HTMLInputElement>) {
+		setActive(false);
+		setFreeText(false);
+		onChange?.(row, column, e.target.value);
+	}
+
+	function onClick(e: React.MouseEvent<HTMLDivElement>) {
 		onActivate();
+		if (e.altKey) setFreeText(allowFreeText ? !isFreeText : false);
+	}
+
+	function onClear() {
+		setActive(false);
+		onChange?.(row, column, "");
 	}
 
 	function onKeyDown(e: React.KeyboardEvent<HTMLElement>) {
 		if (e.key === "Enter") return onActivate();
 		if (e.key === "Escape") return onDeactivate();
+		if (!isFreeText && (e.key === "Delete" || e.key === "Backspace"))
+			return onClear();
 	}
 
 	useEffect(() => {
 		if (!selectRef) return;
 
 		selectRef.focus();
-		selectRef.click();
 	}, [selectRef]);
 
 	return (
@@ -62,16 +86,25 @@ export const GridCell = React.memo(function GridCell({
 		>
 			{displayValue ?? value}
 			{active ? (
-				<select
-					onChange={onSelectChange}
-					onBlur={onDeactivate}
-					value={value}
-					ref={setSelectRef}
-				>
-					{allOptions.map((option) => (
-						<option value={option}>{option}</option>
-					))}
-				</select>
+				isFreeText ? (
+					<input
+						type="text"
+						onBlur={onTextInputBlur}
+						defaultValue={value}
+						ref={setInputRef}
+					/>
+				) : (
+					<select
+						onChange={onSelectChange}
+						onBlur={onDeactivate}
+						value={value}
+						ref={setInputRef}
+					>
+						{allOptions.map((option) => (
+							<option value={option}>{option}</option>
+						))}
+					</select>
+				)
 			) : null}
 		</div>
 	);

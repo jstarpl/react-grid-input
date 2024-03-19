@@ -11,7 +11,8 @@
 	cursor: text;
 }
 
-.GridCell select {
+.GridCell select,
+.GridCell input {
 	position: absolute;
 	min-width: 100%;
 	width: auto;

@@ -19,12 +19,15 @@ export function GridInput({
 	options,
 	value,
 	onChange,
+	allowFreeText,
 }: {
 	columns: number;
 	rows: number;
 	/** The controlled value of the input */
 	value?: string;
 	options: string[];
+	/** Should the user be able to enter any text, after Alt + Click on a Cell */
+	allowFreeText?: boolean;
 	/** Callback for when the value of the input changes */
 	onChange?: ChangeEventHandler;
 }): React.ReactElement | null {
@@ -102,6 +105,8 @@ export function GridInput({
 								row={rowIndex}
 								column={colIndex}
 								options={options}
+								displayValue={undefined}
+								allowFreeText={allowFreeText ?? false}
 								value={state.currentValue[`${rowIndex}_${colIndex}`]}
 								onChange={onGridCellChange}
 							/>

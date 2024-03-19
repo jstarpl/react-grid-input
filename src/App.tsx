@@ -14,6 +14,7 @@ function App() {
 				columns={9}
 				rows={9}
 				onChange={setValue}
+				allowFreeText
 				options={availableOptions}
 			/>
 			<textarea
