@@ -79,8 +79,19 @@ export const GridCell = React.memo(function GridCell({
 	function onPaste(e: React.KeyboardEvent<HTMLElement>) {
 		if (isFreeText) return;
 		e.preventDefault();
-		navigator.clipboard.readText().then((text) => {
-			onChange?.(row, column, text);
+		navigator.clipboard.readText().then((pastedText) => {
+			let allowPaste = false;
+			if (allowFreeText) {
+				allowPaste = true;
+			} else {
+				if (options.includes(pastedText)) allowPaste = true;
+				if (options.includes(pastedText.trim())) {
+					allowPaste = true;
+					pastedText = pastedText.trim();
+				}
+			}
+			if (!allowPaste) return;
+			onChange?.(row, column, pastedText);
 		});
 	}
 
