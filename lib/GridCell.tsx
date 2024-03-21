@@ -61,9 +61,35 @@ export const GridCell = React.memo(function GridCell({
 		onChange?.(row, column, "");
 	}
 
+	function onCut(e: React.KeyboardEvent<HTMLElement>) {
+		if (isFreeText) return;
+		e.preventDefault();
+		if (value === undefined) return;
+		navigator.clipboard.writeText(value);
+		onClear();
+	}
+
+	function onCopy(e: React.KeyboardEvent<HTMLElement>) {
+		if (isFreeText) return;
+		e.preventDefault();
+		if (value === undefined) return;
+		navigator.clipboard.writeText(value);
+	}
+
+	function onPaste(e: React.KeyboardEvent<HTMLElement>) {
+		if (isFreeText) return;
+		e.preventDefault();
+		navigator.clipboard.readText().then((text) => {
+			onChange?.(row, column, text);
+		});
+	}
+
 	function onKeyDown(e: React.KeyboardEvent<HTMLElement>) {
 		if (e.key === "Enter") return onActivate();
 		if (e.key === "Escape") return onDeactivate();
+		if (e.key === "x" && (e.ctrlKey || e.metaKey)) return onCut(e);
+		if (e.key === "c" && (e.ctrlKey || e.metaKey)) return onCopy(e);
+		if (e.key === "v" && (e.ctrlKey || e.metaKey)) return onPaste(e);
 		if (!isFreeText && (e.key === "Delete" || e.key === "Backspace"))
 			return onClear();
 	}
@@ -101,7 +127,9 @@ export const GridCell = React.memo(function GridCell({
 						ref={setInputRef}
 					>
 						{allOptions.map((option) => (
-							<option value={option}>{option}</option>
+							<option key={option} value={option}>
+								{option}
+							</option>
 						))}
 					</select>
 				)
